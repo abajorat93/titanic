@@ -19,27 +19,27 @@ jobs:
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    # steps:
-    #   - name: executing ssh commands using ssh key
-    #     uses: appleboy/ssh-action@master
-    #     with:
-    #       host: ${{ secrets.HOST}}
-    #       username: ${{ secrets.USERNAME }}
-    #       key: ${{ secrets.KEY }}
-    #       script: |
-    #         rm -rf tec_api
-    #         git clone git@github.com:abajorat93/tec_api.git
-    #         cd tec_api
-    #         sudo docker-compose build
-    #         sudo docker-compose up -d
-
     steps:
-      - uses: actions/checkout@v1
-      - name: Build the docker-compose stack
-        run: docker-compose build
-      # - name: Check running containers
-      #   run: docker ps -a
-      # - name: Check logs
-      #   run: docker logs backend
-      # - name: Run test suite
-      #   run: docker exec backend pytest --skip-auth
+      - name: executing ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST}}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            rm -rf titanic
+            git clone git@github.com:abajorat93/titanic.git
+            cd titanic
+            sudo docker-compose build
+            sudo docker-compose up -d
+
+    # steps:
+    #   - uses: actions/checkout@v1
+    #   - name: Build the docker-compose stack
+    #     run: DOCKER_HOST=“ssh://${{ secrets.USERNAME }}@${{ secrets.HOST}} docker-compose up -d
+    #   # - name: Check running containers
+    #   #   run: docker ps -a
+    #   # - name: Check logs
+    #   #   run: docker logs backend
+    #   # - name: Run test suite
+    #   #   run: docker exec backend pytest --skip-auth
