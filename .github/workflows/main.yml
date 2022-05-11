@@ -9,9 +9,9 @@ on:
 
 jobs:
   deploy-prod:
-    name: Build
+    name: Deploy to production environment
     runs-on: ubuntu-latest
-    # if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name == 'main' }}
     steps:
       - name: executing ssh commands using ssh key
         uses: appleboy/ssh-action@master
@@ -26,7 +26,7 @@ jobs:
             sudo docker-compose build
             sudo docker-compose up -d
   deploy-staging:
-    name: Build
+    name: Deploy to staging environment
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'staging' }}
     steps:
