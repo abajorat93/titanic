@@ -4,14 +4,14 @@ name: CI
 
 on:
   push:
-    branches: [ dev, staging, prod]
+    branches: [ staging, main]
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy-prod:
     name: Build
     runs-on: ubuntu-latest
-    # if: ${{ ${GITHUB_REF##*/} == 'main' }}
+    # if: ${{ github.ref_name == 'main' }}
     steps:
       - name: executing ssh commands using ssh key
         uses: appleboy/ssh-action@master
