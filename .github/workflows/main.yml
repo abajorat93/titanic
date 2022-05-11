@@ -32,14 +32,3 @@ jobs:
             cd titanic
             sudo docker-compose build
             sudo docker-compose up -d
-
-    # steps:
-    #   - uses: actions/checkout@v1
-    #   - name: Build the docker-compose stack
-    #     run: DOCKER_HOST=“ssh://${{ secrets.USERNAME }}@${{ secrets.HOST}} docker-compose up -d
-    #   # - name: Check running containers
-    #   #   run: docker ps -a
-    #   # - name: Check logs
-    #   #   run: docker logs backend
-    #   # - name: Run test suite
-    #   #   run: docker exec backend pytest --skip-auth

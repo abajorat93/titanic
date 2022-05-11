@@ -68,6 +68,9 @@ async def prediction(
 ) -> PredictionOutput:
     return output
 
+@app.post("/")
+async def root()
+    return "Hello World"
 
 @app.on_event("startup")
 async def startup():
