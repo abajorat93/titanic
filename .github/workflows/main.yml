@@ -28,7 +28,7 @@ jobs:
   deploy-staging:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ ${GITHUB_REF##*/} == 'staging' }}
+    if: ${{ github.ref_name == 'staging' }}
     steps:
       - name: executing ssh commands using ssh key
         uses: appleboy/ssh-action@master
