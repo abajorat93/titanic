@@ -11,7 +11,7 @@ jobs:
   deploy-prod:
     name: Build
     runs-on: ubuntu-latest
-    if: ${{ ${GITHUB_REF##*/} == 'main' }}
+    # if: ${{ ${GITHUB_REF##*/} == 'main' }}
     steps:
       - name: executing ssh commands using ssh key
         uses: appleboy/ssh-action@master
