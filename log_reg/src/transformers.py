@@ -12,7 +12,7 @@ import numpy as np
 def get_first_cabin(row):
     try:
         return row.split()[0]
-    except KeyError:
+    except AttributeError:
         return np.nan
 
 
