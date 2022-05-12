@@ -52,7 +52,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.KEY }}
+        key: ${{ secrets.KEY }}
         source: "docker-compose.yml"
         target: "titanic/docker-compose.yml"
   deploy-prod:
