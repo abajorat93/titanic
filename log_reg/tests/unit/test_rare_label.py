@@ -1,13 +1,13 @@
 import pytest
 import pandas as pd
-from titanic_pipeline.training.transformers import RareLabelCategoricalEncoder
+from src.transformers import RareLabelCategoricalEncoder
 import os
 
 
 def GetRareLabelTestData():
     print(os.getcwd())
-    df = pd.read_csv("tests/rare_label_csv_test")
-    result = pd.read_csv("tests/rare_labels_csv_result")
+    df = pd.read_csv("tests/unit/rare_label_csv_test")
+    result = pd.read_csv("tests/unit/rare_labels_csv_result")
     return [(df, result)]
 
 
@@ -17,4 +17,4 @@ def test_extract_only_letter(df, result):
     rare_labels = RareLabelCategoricalEncoder(tol=0.02, variables=cat_vars)
     rare_labels.fit(df)
     test_result = rare_labels.transform(df)
-    assert df.equals(result)
+    assert df.equals(test_result)

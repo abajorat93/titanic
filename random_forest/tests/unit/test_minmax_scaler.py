@@ -1,7 +1,6 @@
 import pytest
 import pandas as pd
-from titanic_pipeline.training.transformers import MinMaxScaler
-import numpy as np
+from src.transformers import MinMaxScaler
 
 
 def GetMinMaxScaleTestData():

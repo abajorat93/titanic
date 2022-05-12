@@ -1,5 +1,4 @@
 import joblib
-import os
 from .transformers import (
     MissingIndicator,
     CabinOnlyLetter,
@@ -11,18 +10,13 @@ from .transformers import (
     CleaningTransformer,
     DropTransformer,
 )
-from urllib.parse import urlparse
 import pandas as pd
-import numpy as np
-from datetime import datetime
 
 from . import config
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
 from sklearn.model_selection import train_test_split
-from pathlib import Path
 
 
 def train():
@@ -75,7 +69,7 @@ def train():
     accuracy = (preds == y_test).sum() / len(y_test)
     print(f"Accuracy of the model is {accuracy}")
 
-    now = datetime.now()
+    # now = datetime.now()
     # date_time = now.strftime("%Y_%d_%m_%H%M%S")
     filename = f"{config.MODEL_NAME}"
     print(f"Model stored in models as {filename}")

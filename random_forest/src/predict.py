@@ -1,9 +1,7 @@
-import os
-from typing import List, Tuple
 import joblib
 from sklearn.pipeline import Pipeline
 from pydantic import BaseModel
-from fastapi import FastAPI, Depends, BackgroundTasks
+from fastapi import FastAPI, Depends
 import pandas as pd
 import sys
 from . import config

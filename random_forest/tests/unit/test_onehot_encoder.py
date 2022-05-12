@@ -4,10 +4,9 @@
 # sys.path.append("/c/Tutoriales/Titanic_Pipeline_MLOps_Eq3/src/features")
 # sys.path.append("features")
 
-from sre_constants import CATEGORY_UNI_LINEBREAK
 import pandas as pd
 import pytest
-from titanic_pipeline.training.transformers import OneHotEncoder
+from src.transformers import OneHotEncoder
 
 
 def obtener_datos_one_hot_encoder():
@@ -18,7 +17,8 @@ def obtener_datos_one_hot_encoder():
         lista de tuplas con los datos para el test de OneHotEncoder
     """
     titles = ["Mrs", "Mr", "Miss", "Master", "Other"]
-    # la longitud es menos 1 columna, porque el OneHotEncodig no toma la columna de target
+    # la longitud es menos 1 columna, porque el OneHotEncodig no toma
+    # la columna de target
     titles_len = len(titles) - 1
     titles_variables = ["title"]
     titles_df = pd.DataFrame(titles, columns=titles_variables)

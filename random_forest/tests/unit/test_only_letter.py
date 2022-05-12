@@ -1,10 +1,7 @@
-from sre_constants import CATEGORY_UNI_LINEBREAK
 import pandas as pd
 import numpy as np
 import re
 import pytest
-
-from titanic_pipeline.training.transformers import CabinOnlyLetter
 
 
 def ExtractOnlyLetter(x):
