@@ -29,7 +29,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./random_forest
-          file: ./Dockerfile
+          file: ./random_forest/Dockerfile
           push: true
           tags: ${{secrets.DOCKER_USER}}/titanic_rf:${{ github.ref_name}}
       -
@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./log_reg
-          file: ./Dockerfile
+          file: ./log_reg/Dockerfile
           push: true
           tags: ${{secrets.DOCKER_USER}}/titanic_lr:${{ github.ref_name}}
 # :${{ github.ref_name}}
