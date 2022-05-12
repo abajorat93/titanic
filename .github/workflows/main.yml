@@ -8,38 +8,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  push_to_registry:
-    name: Push to Docker Hub
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Checkout 
-        uses: actions/checkout@v3 
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      -
-        name: Build and push random forest
-        uses: docker/build-push-action@v2
-        with:
-          context: ./random_forest
-          file: ./random_forest/Dockerfile
-          push: true
-          tags: ${{secrets.DOCKER_USER}}/titanic_rf:${{ github.ref_name}}
-      -
-        name: Build and push log reg
-        uses: docker/build-push-action@v2
-        with:
-          context: ./log_reg
-          file: ./log_reg/Dockerfile
-          push: true
-          tags: ${{secrets.DOCKER_USER}}/titanic_lr:${{ github.ref_name}}
+  # push_to_registry:
+  #   name: Push to Docker Hub
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     -
+  #       name: Checkout 
+  #       uses: actions/checkout@v3 
+  #     -
+  #       name: Login to Docker Hub
+  #       uses: docker/login-action@v1
+  #       with:
+  #         username: ${{ secrets.DOCKER_USER }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
+  #     -
+  #       name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+  #     -
+  #       name: Build and push random forest
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: ./random_forest
+  #         file: ./random_forest/Dockerfile
+  #         push: true
+  #         tags: ${{secrets.DOCKER_USER}}/titanic_rf:${{ github.ref_name}}
+  #     -
+  #       name: Build and push log reg
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: ./log_reg
+  #         file: ./log_reg/Dockerfile
+  #         push: true
+  #         tags: ${{secrets.DOCKER_USER}}/titanic_lr:${{ github.ref_name}}
 
   # send_compose:
   #   needs: push_to_registry
@@ -68,9 +68,9 @@ jobs:
       - name: executing ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.AWS_HOST}}
+          host: ${{ secrets.AWS_HOST_OLD}}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_KEY_NEW }}
+          key: ${{ secrets.SERVER_KEY }}
           script: |
             cd titanic
             mkdir titanic_2
