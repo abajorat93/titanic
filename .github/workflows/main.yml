@@ -8,23 +8,54 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-prod:
-    name: Deploy to production environment
+
+
+  push_to_registry:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    if: ${{ github.ref_name == 'main' }}
     steps:
-      - name: executing ssh commands using ssh key
-        uses: appleboy/ssh-action@master
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          host: ${{ secrets.HOST}}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          script: |
-            rm -rf titanic
-            git clone git@github.com:abajorat93/titanic.git
-            cd titanic
-            sudo docker-compose build
-            sudo docker-compose up -d
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: abajorat/titanic
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: log_reg/.
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  # deploy-prod:
+  #   name: Deploy to production environment
+  #   runs-on: ubuntu-latest
+  #   if: ${{ github.ref_name == 'main' }}
+  #   steps:
+  #     - name: deploy docker to docker hub
+  #       run: docker login 
+      # - name: executing ssh commands using ssh key
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST}}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.KEY }}
+      #     script: |
+      #       rm -rf titanic
+      #       git clone git@github.com:abajorat93/titanic.git
+      #       cd titanic
+      #       sudo docker-compose build
+      #       sudo docker-compose up -d
   deploy-staging:
     name: Deploy to staging environment
     runs-on: ubuntu-latest
