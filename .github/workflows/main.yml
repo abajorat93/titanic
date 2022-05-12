@@ -54,7 +54,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_KEY }}
-        source: "docker-compose-prod.yml"
+        source: "docker-compose-${{github.ref_name}}.yml"
         target: "titanic/"
 
   deployment:
