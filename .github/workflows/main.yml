@@ -53,8 +53,9 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.KEY }}
-        source: "docker-compose.yml"
-        target: "titanic/docker-compose.yml"
+        source: "docker-compose-prod.yml"
+        target: "titanic/"
+
   deploy-prod:
     name: Deploy to production environment
     needs: send_compose

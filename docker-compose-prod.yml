@@ -1,0 +1,10 @@
+version: "3"
+services:
+  rf:
+    image: abajorat/titanic_rf:main
+    ports:
+      - 8001:8000
+  lr:
+    image: abajorat/titanic_lr:main
+    ports:
+      - 8000:8000

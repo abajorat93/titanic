@@ -1,0 +1,10 @@
+version: "3"
+services:
+  rf:
+    build: random_forest/.
+    ports:
+      - 8001:8000
+  lr:
+    build: log_reg/.
+    ports:
+      - 8000:8000
