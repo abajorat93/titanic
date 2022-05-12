@@ -1,10 +1,11 @@
 version: "3"
 services:
   rf:
-    build: random_forest/.
+    image: abajorat/titanic_rf:staging
     ports:
       - 8001:8000
   lr:
-    build: log_reg/.
+    image: abajorat/titanic_lr:staging
+
     ports:
       - 8000:8000
