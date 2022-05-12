@@ -9,7 +9,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
       -
@@ -43,7 +43,7 @@ jobs:
 
   send_compose:
     needs: push_to_registry
-    name: Build
+    name: Send docker-compose
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -75,6 +75,7 @@ jobs:
             sudo docker-compose up -d
   deploy-staging:
     name: Deploy to staging environment
+    needs: send_compose
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'staging' }}
     steps:
