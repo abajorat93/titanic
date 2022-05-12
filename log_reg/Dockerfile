@@ -5,9 +5,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY src /app/src
-COPY models /app/models
 ENV PYTHONPATH=/app
 WORKDIR /app/
+RUN mkdir -p models
 
 RUN python -m src.train_model
 
