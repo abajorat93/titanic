@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [ production, staging]
+    branches: [production, staging]
   workflow_dispatch:
 
 jobs:
@@ -14,7 +14,7 @@ jobs:
     steps:
       -
         name: Checkout 
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 
       -
         name: Login to Docker Hub
         uses: docker/login-action@v1
@@ -73,23 +73,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd titanic
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
             sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d
-  # deploy-staging:
-  #   name: Deploy to staging environment
-  #   needs: send_compose
-  #   runs-on: ubuntu-latest
-  #   if: ${{ github.ref_name == 'staging' }}
-  #   steps:
-  #     - name: executing ssh commands using ssh key
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.HOST}}
-  #         username: ${{ secrets.SERVER_USER }}
-  #         key: ${{ secrets.SERVER_KEY }}
-  #         script: |
-  #           rm -rf titanic
-  #           git clone git@github.com:abajorat93/titanic.git
-  #           cd titanic
-  #           sudo docker-compose build
-  #           sudo docker-compose up -d
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
