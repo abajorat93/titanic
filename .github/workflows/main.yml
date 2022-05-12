@@ -31,7 +31,7 @@ jobs:
           context: ./random_forest
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/titanic_rf
+          tags: ${{secrets.DOCKER_HUB_USERNAME}}/titanic_rf
       -
         name: Build and push log reg
         uses: docker/build-push-action@v2
@@ -39,7 +39,7 @@ jobs:
           context: ./log_reg
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/titanic_lr
+          tags: ${{secrets.DOCKER_HUB_USERNAME}}/titanic_lr
 # :${{ github.ref_name}}
   # deploy-prod:
   #   name: Deploy to production environment
