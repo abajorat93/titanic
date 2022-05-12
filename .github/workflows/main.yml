@@ -73,7 +73,6 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd titanic
-            mkdir titanic_2
             # sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
             # sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
             # sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
