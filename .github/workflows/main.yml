@@ -41,6 +41,8 @@ jobs:
         cd ../log_reg
         pytest
   push_to_registry:
+    needs: pytest
+
     name: Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
