@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [ staging, main]
+    branches: [ production, staging]
   workflow_dispatch:
 
 jobs:
@@ -45,14 +45,17 @@ jobs:
     needs: push_to_registry
     name: Send docker-compose
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [staging, production]
     steps:
     - uses: actions/checkout@master
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.KEY }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
         source: "docker-compose-prod.yml"
         target: "titanic/"
 
@@ -60,7 +63,7 @@ jobs:
     name: Deploy to production environment
     needs: send_compose
     runs-on: ubuntu-latest
-    if: ${{ github.ref_name == 'main' }}
+    environment: production
     steps:
       - name: deploy docker to docker hub
         run: docker login 
@@ -68,8 +71,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST}}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
           script: |
             cd titanic
             sudo docker-compose build
