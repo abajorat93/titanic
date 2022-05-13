@@ -93,4 +93,4 @@ jobs:
             cd titanic
             sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
             sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml pull
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up --no-build -d
