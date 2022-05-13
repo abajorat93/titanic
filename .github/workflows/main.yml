@@ -9,7 +9,7 @@ on:
 
 jobs:
   pytest:
-    name: Check Flake8Z
+    name: Check Flake8
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
           context: ./predict
           file: ./predict/Dockerfile
           push: true
-          tags: ${{secrets.DOCKER_USER}}/titanic_rf:${{ github.ref_name}}
+          tags: ${{secrets.DOCKER_USER}}/predict:${{ github.ref_name}}
 
   send_compose:
     needs: push_to_registry
