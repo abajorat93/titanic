@@ -66,6 +66,14 @@ jobs:
         key: ${{ secrets.SERVER_KEY }}
         source: "docker-compose-${{github.ref_name}}.yml"
         target: "titanic/"
+    - name: Copy Models Dir
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.AWS_HOST}}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        source: "models/"
+        target: "titanic/"
 
   deployment:
     name: Run docker compose
@@ -85,4 +93,4 @@ jobs:
             cd titanic
             sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
             sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml pull
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up
