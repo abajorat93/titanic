@@ -12,14 +12,16 @@ from transformers.transformers import (
 )
 import pandas as pd
 
-from . import config
+from src import config
 from sklearn.pipeline import Pipeline
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 from sklearn.model_selection import train_test_split
 
+import sys
 
-def train():
+
+def train(max_depth: int = 4):
     numeric_transformer = Pipeline(
         steps=[
             ("missing_indicator", MissingIndicator(config.NUMERICAL_VARS)),
@@ -50,8 +52,8 @@ def train():
         ]
     )
 
-    regressor = LogisticRegression(
-        C=0.0005, class_weight="balanced", random_state=config.SEED_MODEL
+    regressor = RandomForestClassifier(
+        max_depth=max_depth, class_weight="balanced", random_state=config.SEED_MODEL
     )
 
     titanic_pipeline = Pipeline(
@@ -77,4 +79,5 @@ def train():
 
 
 if __name__ == "__main__":
-    train()
+    max_depth = float(sys.argv[1]) if len(sys.argv) > 1 else 4
+    train(max_depth)

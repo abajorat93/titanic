@@ -1,5 +1,4 @@
 numpy~=1.21.6
-pandas
 scikit-learn
 pytest~=7.1.1
 
@@ -7,6 +6,4 @@ fastapi
 joblib
 pydantic
 uvicorn
-mlflow
-
 git+https://github.com/abajorat93/transformers#egg=transformers

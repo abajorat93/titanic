@@ -1,5 +1,4 @@
 import os
-
 BASE_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
 URL = "https://www.openml.org/data/get_csv/16826755/phpMYEkMl"
 

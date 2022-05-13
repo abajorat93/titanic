@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 formatter = logging.Formatter("%(asctime)s:%(name)s:%(message)s")
 
 stream_handler = logging.StreamHandler(sys.stdout)
-file_handler = logging.FileHandler(f"{config.BASE_DIR}/api.log")
+file_handler = logging.FileHandler(f"{config.LOG_DIR}/api.log")
 
 stream_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)

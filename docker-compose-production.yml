@@ -1,10 +1,16 @@
 version: "3"
 services:
   rf:
-    image: abajorat/titanic_rf:production
+    image: abajorat/predict:production
     ports:
       - 8001:8000
+    volumes:
+      - ./models/rf:/app/models
+      - ./logs/rf:/app/logs/
   lr:
-    image: abajorat/titanic_lr:production
+    image: abajorat/predict:production
     ports:
       - 8000:8000
+    volumes:
+      - ./models/lr:/app/models
+      - ./logs/lr:/app/logs/

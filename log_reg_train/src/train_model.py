@@ -12,17 +12,14 @@ from transformers.transformers import (
 )
 import pandas as pd
 
-from . import config
+from src import config
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 
 from sklearn.model_selection import train_test_split
 
-import sys
-import mlflow
 
-
-def train(max_depth: int = 4):
+def train():
     numeric_transformer = Pipeline(
         steps=[
             ("missing_indicator", MissingIndicator(config.NUMERICAL_VARS)),
@@ -53,8 +50,8 @@ def train(max_depth: int = 4):
         ]
     )
 
-    regressor = RandomForestClassifier(
-        max_depth=max_depth, class_weight="balanced", random_state=config.SEED_MODEL
+    regressor = LogisticRegression(
+        C=0.0005, class_weight="balanced", random_state=config.SEED_MODEL
     )
 
     titanic_pipeline = Pipeline(
@@ -67,23 +64,17 @@ def train(max_depth: int = 4):
         test_size=0.2,
         random_state=config.SEED_SPLIT,
     )
-    mlflow.set_experiment("random_forest")
-    with mlflow.start_run():
-        titanic_pipeline.fit(X_train, y_train)
-        preds = titanic_pipeline.predict(X_test)
-        accuracy = (preds == y_test).sum() / len(y_test)
-        print(f"Accuracy of the model is {accuracy}")
+    titanic_pipeline.fit(X_train, y_train)
+    preds = titanic_pipeline.predict(X_test)
+    accuracy = (preds == y_test).sum() / len(y_test)
+    print(f"Accuracy of the model is {accuracy}")
 
-        # now = datetime.now()
-        # date_time = now.strftime("%Y_%d_%m_%H%M%S")
-        filename = f"{config.MODEL_NAME}"
-        print(f"Model stored in models as {filename}")
-        joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
-        mlflow.log_param("max_depth", max_depth)
-        mlflow.log_metric("accuracy", accuracy)
-        mlflow.sklearn.log_model(titanic_pipeline, "model")
+    # now = datetime.now()
+    # date_time = now.strftime("%Y_%d_%m_%H%M%S")
+    filename = f"{config.MODEL_NAME}"
+    joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
+    print(f"Model stored in models as {filename}")
 
 
 if __name__ == "__main__":
-    max_depth = float(sys.argv[1]) if len(sys.argv) > 1 else 4
-    train(max_depth)
+    train()
