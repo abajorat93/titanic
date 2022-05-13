@@ -45,58 +45,63 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER}}
           password: ${{ secrets.DOCKER_PASSWORD}}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      -
-        name: Build and push predict image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./predict
-          file: ./predict/Dockerfile
-          push: true
-          tags: ${{secrets.DOCKER_USER}}/predict:${{ github.ref_name}}
+      # -
+      #   name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+      # -
+      #   name: Build and push predict image
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./predict
+      #     file: ./predict/Dockerfile
+      #     push: true
+      #     tags: ${{secrets.DOCKER_USER}}/predict:${{ github.ref_name}}
+      - name: docker-compose build
+        run: |
+          docker-compose build -f docker-compose-${{github.ref_name}}.yml
+      - name: docker push
+        run: |
+          docker-compose push 
+  # send_compose:
+  #   needs: push_to_registry
+  #   name: Send docker-compose
+  #   runs-on: ubuntu-latest
+  #   environment: ${{github.ref_name}}
+  #   steps:
+  #   - uses: actions/checkout@master
+  #   - name: Copy Docker Compose
+  #     uses: appleboy/scp-action@master
+  #     with:
+  #       host: ${{ secrets.AWS_HOST}}
+  #       username: ${{ secrets.SERVER_USER }}
+  #       key: ${{ secrets.SERVER_KEY }}
+  #       source: "docker-compose-${{github.ref_name}}.yml"
+  #       target: "titanic/"
+  #   - name: Copy Models Dir
+  #     uses: appleboy/scp-action@master
+  #     with:
+  #       host: ${{ secrets.AWS_HOST}}
+  #       username: ${{ secrets.SERVER_USER }}
+  #       key: ${{ secrets.SERVER_KEY }}
+  #       source: "models/"
+  #       target: "titanic/"
 
-  send_compose:
-    needs: push_to_registry
-    name: Send docker-compose
-    runs-on: ubuntu-latest
-    environment: ${{github.ref_name}}
-    steps:
-    - uses: actions/checkout@master
-    - name: Copy Docker Compose
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.AWS_HOST}}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_KEY }}
-        source: "docker-compose-${{github.ref_name}}.yml"
-        target: "titanic/"
-    - name: Copy Models Dir
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.AWS_HOST}}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_KEY }}
-        source: "models/"
-        target: "titanic/"
-
-  deployment:
-    name: Run docker compose
-    needs: send_compose
-    runs-on: ubuntu-latest
-    environment: ${{ github.ref_name}}
-    steps:
-      - name: deploy docker to docker hub
-        run: docker login 
-      - name: executing ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.AWS_HOST}}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_KEY }}
-          script: |
-            cd titanic
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
+  # deployment:
+  #   name: Run docker compose
+  #   needs: send_compose
+  #   runs-on: ubuntu-latest
+  #   environment: ${{ github.ref_name}}
+  #   steps:
+  #     - name: deploy docker to docker hub
+  #       run: docker login 
+  #     - name: executing ssh commands using ssh key
+  #       uses: appleboy/ssh-action@master
+  #       with:
+  #         host: ${{ secrets.AWS_HOST}}
+  #         username: ${{ secrets.SERVER_USER }}
+  #         key: ${{ secrets.SERVER_KEY }}
+  #         script: |
+  #           cd titanic
+  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
+  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
+  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans

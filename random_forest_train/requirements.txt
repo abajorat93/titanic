@@ -6,4 +6,4 @@ fastapi
 joblib
 pydantic
 uvicorn
-git+https://github.com/abajorat93/transformers#egg=transformers
+https://github.com/abajorat93/transformers/archive/refs/tags/v0.1.0.zip

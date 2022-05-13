@@ -1,6 +1,7 @@
 version: "3"
 services:
   rf:
+    build: predict/.
     image: abajorat/predict:staging
     ports:
       - 8001:8000

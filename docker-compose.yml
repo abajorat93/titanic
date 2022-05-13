@@ -2,6 +2,7 @@ version: "3"
 services:
   rf:
     build: predict/.
+    image: abajorat/titanic_rf
     ports:
       - 8001:8000
     volumes:
@@ -9,6 +10,7 @@ services:
       - ./logs/rf:/app/logs/
   lr:
     build: predict/.
+    image: abajorat/titanic_lr
     ports:
       - 8000:8000
     volumes:
