@@ -1,7 +1,7 @@
 version: "3"
 services:
   titanic_rf:
-    build: predict/.
+    # build: predict/.
     image: abajorat/titanic_rf:staging
     ports:
       - 8001:8000
