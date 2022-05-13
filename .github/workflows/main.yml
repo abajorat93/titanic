@@ -58,10 +58,10 @@ jobs:
       #     tags: ${{secrets.DOCKER_USER}}/predict:${{ github.ref_name}}
       - name: docker-compose build
         run: |
-          docker-compose build -f docker-compose-${{github.ref_name}}.yml
+          docker-compose -f docker-compose-${{github.ref_name}}.yml build 
       - name: docker push
         run: |
-          docker-compose push 
+          docker-compose -f docker-compose-${{github.ref_name}}.yml push 
   # send_compose:
   #   needs: push_to_registry
   #   name: Send docker-compose
@@ -86,22 +86,22 @@ jobs:
   #       source: "models/"
   #       target: "titanic/"
 
-  # deployment:
-  #   name: Run docker compose
-  #   needs: send_compose
-  #   runs-on: ubuntu-latest
-  #   environment: ${{ github.ref_name}}
-  #   steps:
-  #     - name: deploy docker to docker hub
-  #       run: docker login 
-  #     - name: executing ssh commands using ssh key
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.AWS_HOST}}
-  #         username: ${{ secrets.SERVER_USER }}
-  #         key: ${{ secrets.SERVER_KEY }}
-  #         script: |
-  #           cd titanic
-  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
-  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
-  #           sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
+  deployment:
+    name: Run docker compose
+    needs: send_compose
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name}}
+    steps:
+      - name: deploy docker to docker hub
+        run: docker login 
+      - name: executing ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST}}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            cd titanic
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml build
+            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans

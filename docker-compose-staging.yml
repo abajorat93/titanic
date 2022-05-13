@@ -1,15 +1,15 @@
 version: "3"
 services:
-  rf:
+  titanic_rf:
     build: predict/.
-    image: abajorat/predict:staging
+    image: abajorat/titanic_rf:staging
     ports:
       - 8001:8000
     volumes:
       - ./models/rf:/app/models
       - ./logs/rf:/app/logs/
-  lr:
-    image: abajorat/predict:staging
+  titanic_lr:
+    image: abajorat/titanic_lr:staging
     ports:
       - 8000:8000
     volumes:
