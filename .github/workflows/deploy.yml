@@ -2,7 +2,7 @@ name: Deployment
 
 on:
   push:
-    branches: [staging, production]
+    branches: [staging]
 
 jobs:
   flake8:
@@ -21,4 +21,5 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_KEY }}
         script: |
-          mkdir tec
+          sudo rm -rf titanic
+          git clone -b staging https://github.com/abajorat93/titanic.git
