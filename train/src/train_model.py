@@ -11,6 +11,8 @@ from transformers.transformers import (
     DropTransformer,
 )
 import pandas as pd
+import mlflow
+import mlflow.sklearn
 
 from . import config
 from sklearn.pipeline import Pipeline
@@ -22,7 +24,7 @@ from sklearn.model_selection import train_test_split
 import sys
 
 
-def train(model_name: str):
+def train(model_name: str, max_depth: int):
     numeric_transformer = Pipeline(
         steps=[
             ("missing_indicator", MissingIndicator(config.NUMERICAL_VARS)),
@@ -54,7 +56,7 @@ def train(model_name: str):
     )
     if model_name == 'RandomForest':
         regressor = RandomForestClassifier(
-            max_depth=4, class_weight="balanced",
+            max_depth=max_depth, class_weight="balanced",
             random_state=config.SEED_MODEL
         )
     else:
@@ -73,18 +75,23 @@ def train(model_name: str):
         test_size=0.2,
         random_state=config.SEED_SPLIT,
     )
-    titanic_pipeline.fit(X_train, y_train)
-    preds = titanic_pipeline.predict(X_test)
-    accuracy = (preds == y_test).sum() / len(y_test)
-    print(f"Accuracy of the model is {accuracy}")
-
-    # now = datetime.now()
-    # date_time = now.strftime("%Y_%d_%m_%H%M%S")
-    filename = f"{config.MODEL_NAME}"
-    print(f"Model stored in models as {filename}")
-    joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
+    with mlflow.start_run():
+        titanic_pipeline.fit(X_train, y_train)
+        preds = titanic_pipeline.predict(X_test)
+        accuracy = (preds == y_test).sum() / len(y_test)
+        print(f"Accuracy of the model is {accuracy}")
+        mlflow.log_param("regression_type", model_name)
+        mlflow.log_param("max_depth", max_depth)
+        mlflow.log_metric("accuracy", accuracy)
+        # now = datetime.now()
+        # date_time = now.strftime("%Y_%d_%m_%H%M%S")
+        filename = f"{config.MODEL_NAME}"
+        print(f"Model stored in models as {filename}")
+        joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
+        mlflow.sklearn.log_model(titanic_pipeline, 'model')
 
 
 if __name__ == "__main__":
     model_name = str(sys.argv[1]) if len(sys.argv) > 1 else 'LogisticRegression'
-    train(model_name=model_name)
+    max_depth = float(sys.argv[2]) if len(sys.argv) > 2 else 4
+    train(model_name=model_name, max_depth=max_depth)
