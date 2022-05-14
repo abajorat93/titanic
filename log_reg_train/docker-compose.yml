@@ -1,6 +1,8 @@
 version: "3"
 services:
-  rf_training:
+  lr_training:
     build: .
     volumes:
+      - ./src:/app/src
       - ../models/lr:/app/models
+    command: python -m src.train_model

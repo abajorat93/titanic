@@ -8,6 +8,7 @@ services:
     volumes:
       - ./models/rf:/app/models
       - ./logs/rf:/app/logs/
+    command: uvicorn src.predict:app --host 0.0.0.0
   titanic_lr:
     build: predict/.
     image: abajorat/titanic_lr
@@ -16,3 +17,4 @@ services:
     volumes:
       - ./models/lr:/app/models
       - ./logs/lr:/app/logs/
+    command: uvicorn src.predict:app --host 0.0.0.0

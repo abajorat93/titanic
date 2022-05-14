@@ -12,7 +12,7 @@ from transformers.transformers import (
 )
 import pandas as pd
 
-from src import config
+from . import config
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 
@@ -55,7 +55,7 @@ def train():
     )
 
     titanic_pipeline = Pipeline(
-        [("preprocessor", preprocessor), ("regressor", regressor)]
+        [("preprocessor", preprocessor), ("logistic_regressor", regressor)]
     )
     df = pd.read_csv(config.URL).drop(columns="home.dest")
     X_train, X_test, y_train, y_test = train_test_split(
