@@ -4,12 +4,6 @@ on:
   push:
     branches: 
       base
-<<<<<<< HEAD:.github/workflows/flake8.yml
-  pull_request:
-    branches:
-      base
-=======
->>>>>>> 6e553f018d7b6595053cf37ccb89fa2e9fc04d5b:.github/workflows/main.yml
   workflow_dispatch:
   workflow_call:
 
