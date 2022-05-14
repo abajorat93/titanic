@@ -7,6 +7,26 @@ services:
       - ./models/lr:/app/models
     command: python -m src.train_model LogisticRegression
 
+  train_rf:
+    image: abajorat/train_rf:v1
+    build: train/.
+    volumes:
+      - ./models/rf:/app/models
+    command: python -m src.train_model RandomForest
+
+  serve_rf:
+    build: serve/.
+    image: abajorat/serve_rf:v1
+    depends_on:
+      train_rf:
+        condition: service_completed_successfully
+    ports:
+      - 8001:5001
+    volumes:
+      - ./models/rf:/app/models
+      - ./logs/rf:/app/logs/
+    command: uvicorn src.predict:app --host 0.0.0.0 --port 5001
+
   serve_lr:
     build: serve/.
     image: abajorat/serve_lr:v1
