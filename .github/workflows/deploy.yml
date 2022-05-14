@@ -5,9 +5,8 @@ on:
     branches: [staging, production]
 
 jobs:
-  flake8:
-    uses: ./.github/workflows/flake8.yml
-
+  # flake8:
+  #   uses: ./.github/workflows/flake8.yml
   deployment:
     name: Start server
     needs: flake8
