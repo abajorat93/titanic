@@ -28,7 +28,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   deployment:
-    name: Clone And Run docker compose
+    name: Start server
     needs: flake8
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name}}
@@ -45,7 +45,7 @@ jobs:
             cd titanic
             sudo docker-compose down
             cd ..
-            rm -rf titanic
+            sudo rm -rf titanic
             git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
             cd titanic 
             sudo docker-compose up -d --remove-orphans
