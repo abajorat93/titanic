@@ -21,5 +21,10 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_KEY }}
         script: |
+          cd titanic
+          sudo docker-compose down
+          cd ..
           sudo rm -rf titanic
           git clone -b staging https://github.com/abajorat93/titanic.git
+          cd titanic
+          sudo docker-compose up -d --remove-orphans
