@@ -77,8 +77,9 @@ def train():
     # now = datetime.now()
     # date_time = now.strftime("%Y_%d_%m_%H%M%S")
     filename = f"{config.MODEL_NAME}"
-    joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
+    joblib.dump(titanic_pipeline, f"models/{train_config.MODEL}/model.sav")
     print(f"Model stored in models as {filename}")
+    print(train_config.MODEL)
 
 
 if __name__ == "__main__":
