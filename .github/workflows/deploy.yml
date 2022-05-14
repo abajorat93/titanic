@@ -1,0 +1,9 @@
+name: Deployment
+
+on:
+  push:
+    branches: [staging, production]
+
+jobs:
+  flake8:
+    uses: ./.github/workflows/flake8.yml
