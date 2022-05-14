@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/flake8.yml
   deployment:
     name: Start server
-    needs: flake8
+    needs: call_flake8
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name}}
     steps:
