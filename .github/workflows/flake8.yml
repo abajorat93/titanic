@@ -4,6 +4,9 @@ on:
   push:
     branches: 
       base
+  pull_request:
+    branches:
+      base
   workflow_dispatch:
   workflow_call:
 

@@ -26,6 +26,18 @@
 
 
 
+  name: CI
+
+on:
+  push:
+    branches: [staging, production]
+  pull_request:
+    branches:[staging, production]
+  workflow_dispatch:
+
+jobs:
+  flake8:
+    uses: ./.github/workflows/flake8.yml
   deployment:
     name: Start server
     needs: flake8
@@ -48,6 +60,3 @@
             git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
             cd titanic 
             sudo docker-compose up -d --remove-orphans
-
-
-
