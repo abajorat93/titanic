@@ -7,3 +7,18 @@ on:
 jobs:
   flake8:
     uses: ./.github/workflows/flake8.yml
+
+  deployment:
+    name: Start server
+    needs: flake8
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+    - name: executing ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AWS_HOST}}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_KEY }}
+        script: |
+          mkdir tec
