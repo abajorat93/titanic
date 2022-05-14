@@ -65,7 +65,7 @@ jobs:
   #       target: "titanic/"
 
   deployment:
-    name: Run docker compose
+    name: Clone And Run docker compose
     needs: flake8
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name}}
@@ -82,5 +82,5 @@ jobs:
             rm -rf titanic
             git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
             cd titanic 
-            docker compose down --remove-orphans
-            docker compose up -d
+            docker compose down
+            docker compose up -d --remove-orphans
