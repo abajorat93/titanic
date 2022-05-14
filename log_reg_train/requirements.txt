@@ -1,4 +1,0 @@
-numpy~=1.21.6
-scikit-learn
-joblib
-https://github.com/abajorat93/transformers/archive/refs/tags/v0.1.0.zip

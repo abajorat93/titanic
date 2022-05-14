@@ -2,17 +2,17 @@ version: "3"
 services:
   train_rf:
     image: abajorat/train_rf:v1
-    build: random_forest_train/.
+    build: train/.
     volumes:
       - ./models/rf:/app/models
-    command: python -m src.train_model
+    command: python -m src.train_model RandomForest
 
   train_lr:
     image: abajorat/lr_training:v1
-    build: log_reg_train/.
+    build: train/.
     volumes:
       - ./models/lr:/app/models
-    command: python -m src.train_model
+    command: python -m src.train_model LogisticRegression
 
   serve_rf:
     build: serve/.

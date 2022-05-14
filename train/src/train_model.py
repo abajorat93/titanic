@@ -14,12 +14,15 @@ import pandas as pd
 
 from . import config
 from sklearn.pipeline import Pipeline
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 
 from sklearn.model_selection import train_test_split
 
+import sys
 
-def train():
+
+def train(model_name: str):
     numeric_transformer = Pipeline(
         steps=[
             ("missing_indicator", MissingIndicator(config.NUMERICAL_VARS)),
@@ -49,13 +52,19 @@ def train():
             ("scaling", MinMaxScaler()),
         ]
     )
-
-    regressor = LogisticRegression(
-        C=0.0005, class_weight="balanced", random_state=config.SEED_MODEL
-    )
+    if model_name == 'RandomForest':
+        regressor = RandomForestClassifier(
+            max_depth=4, class_weight="balanced",
+            random_state=config.SEED_MODEL
+        )
+    else:
+        regressor = LogisticRegression(
+            C=0.0005, class_weight="balanced",
+            random_state=config.SEED_MODEL
+        )
 
     titanic_pipeline = Pipeline(
-        [("preprocessor", preprocessor), ("logistic_regressor", regressor)]
+        [("preprocessor", preprocessor), (f"{model_name}_regressor", regressor)]
     )
     df = pd.read_csv(config.URL).drop(columns="home.dest")
     X_train, X_test, y_train, y_test = train_test_split(
@@ -72,9 +81,10 @@ def train():
     # now = datetime.now()
     # date_time = now.strftime("%Y_%d_%m_%H%M%S")
     filename = f"{config.MODEL_NAME}"
-    joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
     print(f"Model stored in models as {filename}")
+    joblib.dump(titanic_pipeline, f"{config.MODEL_NAME}")
 
 
 if __name__ == "__main__":
-    train()
+    model_name = str(sys.argv[1]) if len(sys.argv) > 1 else 'LogisticRegression'
+    train(model_name=model_name)
