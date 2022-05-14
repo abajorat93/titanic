@@ -2,7 +2,7 @@ name: Deployment
 
 on:
   push:
-    branches: [staging]
+    branches: [staging, production]
 
 jobs:
   flake8:
@@ -12,7 +12,7 @@ jobs:
     name: Start server
     needs: flake8
     runs-on: ubuntu-latest
-    environment: staging
+    environment: ${{github.ref_name}}
     steps:
     - name: executing ssh commands using ssh key
       uses: appleboy/ssh-action@master
@@ -25,6 +25,6 @@ jobs:
           sudo docker-compose down
           cd ..
           sudo rm -rf titanic
-          git clone -b staging https://github.com/abajorat93/titanic.git
+          git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
           cd titanic
           sudo docker-compose up -d --remove-orphans
