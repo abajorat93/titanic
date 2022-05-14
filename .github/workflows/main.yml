@@ -86,4 +86,4 @@ jobs:
             cd ..
             mkdir bla
             cd bla
-            git clone ${{ secrets.GITHUB_TOKEN }}@github.com:abajorat93/titanic.git
+            git clone  -b ${{github.ref_name}} git@github.com:abajorat93/titanic.git
