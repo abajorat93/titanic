@@ -1,14 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 on:
   push:
-    branches: [production, staging]
+    branches: [staging, production]
   workflow_dispatch:
 
 jobs:
-  pytest:
+  flake8:
     name: Check Flake8
     runs-on: ubuntu-latest
     steps:
@@ -28,11 +26,9 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
         
   push_to_registry:
-    needs: pytest
-
+    needs: flake8
     name: Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -47,10 +43,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD}}
       - name: docker-compose build
         run: |
-          docker-compose -f docker-compose-${{github.ref_name}}.yml build 
+          docker-compose -f docker-compose.yml build 
       - name: docker push
         run: |
-          docker-compose -f docker-compose-${{github.ref_name}}.yml push 
+          docker-compose -f docker-compose.yml push 
+
   send_compose:
     needs: push_to_registry
     name: Send docker-compose
@@ -64,7 +61,7 @@ jobs:
         host: ${{ secrets.AWS_HOST}}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_KEY }}
-        source: "docker-compose-${{github.ref_name}}.yml"
+        source: "docker-compose.yml"
         target: "titanic/"
 
   deployment:
@@ -83,6 +80,10 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd titanic
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml down
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml pull
-            sudo docker-compose -f docker-compose-${{ github.ref_name}}.yml up -d --remove-orphans
+            sudo docker-compose -f docker-compose.yml down
+            sudo docker-compose -f docker-compose.yml pull
+            sudo docker-compose -f docker-compose.yml up -d --remove-orphans
+            cd ..
+            mkdir bla
+            cd bla
+            git clone ${{ secrets.GITHUB_TOKEN }}@github.com:abajorat93/titanic.git
