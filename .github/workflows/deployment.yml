@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  call_flake8:
+  flake8:
     uses: ./.github/workflows/flake8.yml
   deployment:
     name: Start server
-    needs: call_flake8
+    needs: flake8
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name}}
     steps:

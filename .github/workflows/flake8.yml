@@ -2,6 +2,8 @@ name: CI
 
 on:
   push:
+    branches: 
+      base
   workflow_dispatch:
   workflow_call:
 
