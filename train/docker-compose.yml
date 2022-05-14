@@ -1,9 +1,0 @@
-version: "3"
-services:
-  training:
-    build: .
-    volumes:
-      - ./src:/app/src
-      - ../models/:/app/models
-      - ../train_configs/random_forest:/app/src/configs
-    command: python -m src.train_model

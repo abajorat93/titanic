@@ -1,20 +1,41 @@
 version: "3"
 services:
+  rf_training:
+    image: abajorat/rf_training:v1
+    build: random_forest_train/.
+    volumes:
+      - ./models/rf:/app/models
+    command: python -m src.train_model
+
+  lr_training:
+    image: abajorat/lr_training:v1
+    build: log_reg_train/.
+    volumes:
+      - ./models/lr:/app/models
+    command: python -m src.train_model
+
   titanic_rf:
     build: predict/.
-    image: abajorat/titanic_rf
+    image: abajorat/titanic_rf:v1
+    depends_on:
+      rf_training:
+        condition: service_completed_successfully
     ports:
-      - 8001:8000
+      - 8001:5001
     volumes:
       - ./models/rf:/app/models
       - ./logs/rf:/app/logs/
-    command: uvicorn src.predict:app --host 0.0.0.0
+    command: uvicorn src.predict:app --host 0.0.0.0 --port 5001
+
   titanic_lr:
     build: predict/.
-    image: abajorat/titanic_lr
+    image: abajorat/titanic_lr:v1
+    depends_on:
+      lr_training:
+        condition: service_completed_successfully
     ports:
-      - 8000:8000
+      - 8002:5002
     volumes:
       - ./models/lr:/app/models
       - ./logs/lr:/app/logs/
-    command: uvicorn src.predict:app --host 0.0.0.0
+    command: uvicorn src.predict:app --host 0.0.0.0 --port 5002
