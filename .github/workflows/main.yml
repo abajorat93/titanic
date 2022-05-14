@@ -26,6 +26,31 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  deployment:
+    name: Clone And Run docker compose
+    needs: flake8
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name}}
+    steps:
+      - name: deploy docker to docker hub
+        run: docker login 
+      - name: executing ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST}}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_KEY }}
+          script: |
+            cd titanic
+            sudo docker-compose down
+            cd ..
+            rm -rf titanic
+            git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
+            cd titanic 
+            sudo docker-compose up -d --remove-orphans
+
+
         
   # push_to_registry:
   #   needs: flake8
@@ -43,10 +68,10 @@ jobs:
   #         password: ${{ secrets.DOCKER_PASSWORD}}
   #     - name: docker-compose build
   #       run: |
-  #         docker-compose -f docker-compose.yml build 
+  #         docker-compose build 
   #     - name: docker push
   #       run: |
-  #         docker-compose -f docker-compose.yml push 
+  #         docker-compose push 
 
   # send_compose:
   #   needs: push_to_registry
@@ -63,24 +88,3 @@ jobs:
   #       key: ${{ secrets.SERVER_KEY }}
   #       source: "docker-compose.yml"
   #       target: "titanic/"
-
-  deployment:
-    name: Clone And Run docker compose
-    needs: flake8
-    runs-on: ubuntu-latest
-    environment: ${{ github.ref_name}}
-    steps:
-      - name: deploy docker to docker hub
-        run: docker login 
-      - name: executing ssh commands using ssh key
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.AWS_HOST}}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_KEY }}
-          script: |
-            rm -rf titanic
-            git clone -b ${{github.ref_name}} https://github.com/abajorat93/titanic.git
-            cd titanic 
-            docker compose down
-            docker compose up -d --remove-orphans
